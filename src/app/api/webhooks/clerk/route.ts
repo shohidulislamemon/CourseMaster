@@ -41,12 +41,13 @@ export async function POST(req: Request) {
     const eventType = evt.type;
     if (eventType === "user.created" || eventType === "user.updated") {
         const { id, email_addresses, first_name, last_name, image_url } = evt.data;
+        const primaryEmail = email_addresses[0]?.email_address;
 
         try {
             await connectDB()
             await User.findOneAndUpdate({ clerkId: id }, {
                 clerkId: id,
-                email: email_addresses,
+                email: primaryEmail,
                 firstName: first_name,
                 lastName: last_name,
                 imageUrl: image_url,
